@@ -29,7 +29,7 @@ final class EmbedConfigController extends ControllerBase {
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container): self {
+  public static function create(ContainerInterface $container) {
     return new self(
       $container->get('powerbi_public_embed.embed_service'),
       $container->get('flood'),

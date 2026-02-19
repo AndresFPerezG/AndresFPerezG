@@ -15,21 +15,21 @@ final class PowerBiPublicEmbedSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormId(): string {
+  public function getFormId() {
     return 'powerbi_public_embed_settings_form';
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getEditableConfigNames(): array {
+  protected function getEditableConfigNames() {
     return ['powerbi_public_embed.settings'];
   }
 
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state): array {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('powerbi_public_embed.settings');
 
     $form['auth'] = [
@@ -141,7 +141,7 @@ final class PowerBiPublicEmbedSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, FormStateInterface $form_state): void {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     $raw = trim((string) $form_state->getValue('allowed_reports_raw'));
     if ($raw === '') {
       $form_state->setErrorByName('allowed_reports_raw', $this->t('Debes definir al menos un reporte permitido.'));
@@ -179,7 +179,7 @@ final class PowerBiPublicEmbedSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state): void {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $config = $this->config('powerbi_public_embed.settings');
     $current_secret = (string) $config->get('client_secret');
     $new_secret = trim((string) $form_state->getValue('client_secret'));

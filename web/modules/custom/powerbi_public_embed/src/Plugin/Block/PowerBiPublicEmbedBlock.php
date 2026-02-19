@@ -22,7 +22,7 @@ final class PowerBiPublicEmbedBlock extends BlockBase {
   /**
    * {@inheritdoc}
    */
-  public function defaultConfiguration(): array {
+  public function defaultConfiguration() {
     return [
       'report_slug' => '',
       'height' => 640,
@@ -32,7 +32,7 @@ final class PowerBiPublicEmbedBlock extends BlockBase {
   /**
    * {@inheritdoc}
    */
-  public function blockForm($form, FormStateInterface $form_state): array {
+  public function blockForm($form, FormStateInterface $form_state) {
     $form['report_slug'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Slug del reporte'),
@@ -55,7 +55,7 @@ final class PowerBiPublicEmbedBlock extends BlockBase {
   /**
    * {@inheritdoc}
    */
-  public function blockSubmit($form, FormStateInterface $form_state): void {
+  public function blockSubmit($form, FormStateInterface $form_state) {
     $this->configuration['report_slug'] = trim((string) $form_state->getValue('report_slug'));
     $this->configuration['height'] = (int) $form_state->getValue('height');
   }
@@ -63,7 +63,7 @@ final class PowerBiPublicEmbedBlock extends BlockBase {
   /**
    * {@inheritdoc}
    */
-  public function build(): array {
+  public function build() {
     $slug = (string) $this->configuration['report_slug'];
     $height = max(320, (int) $this->configuration['height']);
 
