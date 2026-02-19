@@ -1,0 +1,43 @@
+powerbi_public_embed.settings:
+  type: config_object
+  label: 'Power BI public embed settings'
+  mapping:
+    tenant_id:
+      type: string
+      label: 'Tenant ID'
+    client_id:
+      type: string
+      label: 'Client ID'
+    client_secret:
+      type: string
+      label: 'Client secret'
+    authority_host:
+      type: string
+      label: 'Authority host'
+    scope:
+      type: string
+      label: 'OAuth scope'
+    api_base_url:
+      type: string
+      label: 'Power BI API base URL'
+    token_cache_ttl:
+      type: integer
+      label: 'Access token cache TTL'
+    embed_token_cache_ttl:
+      type: integer
+      label: 'Embed token cache TTL'
+    endpoint_rate_limit:
+      type: integer
+      label: 'Rate limit per window'
+    endpoint_rate_window:
+      type: integer
+      label: 'Rate limit window in seconds'
+    mock_mode:
+      type: boolean
+      label: 'Mock mode'
+    disable_export_data:
+      type: boolean
+      label: 'Disable export features'
+    allowed_reports_raw:
+      type: text
+      label: 'Allowed reports lines'

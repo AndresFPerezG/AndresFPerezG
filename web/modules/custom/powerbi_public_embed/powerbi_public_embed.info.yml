@@ -1,0 +1,6 @@
+name: 'Power BI Public Embed'
+type: module
+description: 'Ejemplo seguro para embeber reportes públicos de Power BI en Drupal usando tokens temporales.'
+package: Custom
+core_version_requirement: ^10 || ^11
+configure: powerbi_public_embed.settings

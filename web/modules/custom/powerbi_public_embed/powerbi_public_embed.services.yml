@@ -1,0 +1,12 @@
+services:
+  logger.channel.powerbi_public_embed:
+    parent: logger.channel_base
+    arguments: ['powerbi_public_embed']
+
+  powerbi_public_embed.embed_service:
+    class: Drupal\powerbi_public_embed\Service\PowerBiEmbedService
+    arguments:
+      - '@config.factory'
+      - '@http_client'
+      - '@cache.default'
+      - '@logger.channel.powerbi_public_embed'
