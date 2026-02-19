@@ -1,0 +1,5 @@
+powerbi_public_embed.settings:
+  title: 'Power BI public embed'
+  description: 'Configura integración de reportes públicos de Power BI.'
+  route_name: powerbi_public_embed.settings
+  parent: system.admin_config_services

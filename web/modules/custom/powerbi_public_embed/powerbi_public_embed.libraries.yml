@@ -1,0 +1,16 @@
+powerbi_client_cdn:
+  remote: https://github.com/microsoft/PowerBI-JavaScript
+  version: 2.x
+  license:
+    name: MIT
+    url: https://github.com/microsoft/PowerBI-JavaScript/blob/master/LICENSE
+    gpl-compatible: true
+  js:
+    https://cdn.jsdelivr.net/npm/powerbi-client@2.23.9/dist/powerbi.min.js: { type: external, minified: true, attributes: { defer: true } }
+
+powerbi_public_embed:
+  js:
+    js/powerbi-public-embed.js: {}
+  dependencies:
+    - core/drupal
+    - core/once

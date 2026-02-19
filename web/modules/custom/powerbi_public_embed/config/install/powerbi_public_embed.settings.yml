@@ -1,0 +1,15 @@
+tenant_id: '00000000-0000-0000-0000-000000000000'
+client_id: '11111111-1111-1111-1111-111111111111'
+client_secret: 'REEMPLAZAR_EN_PRODUCCION'
+authority_host: 'https://login.microsoftonline.com'
+scope: 'https://analysis.windows.net/powerbi/api/.default'
+api_base_url: 'https://api.powerbi.com'
+token_cache_ttl: 300
+embed_token_cache_ttl: 240
+endpoint_rate_limit: 120
+endpoint_rate_window: 60
+mock_mode: true
+disable_export_data: true
+allowed_reports_raw: |
+  economia-nacional|aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa|bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb|cccccccc-cccc-cccc-cccc-cccccccccccc
+  salud-publica|dddddddd-dddd-dddd-dddd-dddddddddddd|eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee|

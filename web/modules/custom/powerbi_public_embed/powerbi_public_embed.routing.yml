@@ -1,0 +1,16 @@
+powerbi_public_embed.settings:
+  path: '/admin/config/services/powerbi-public-embed'
+  defaults:
+    _form: '\Drupal\powerbi_public_embed\Form\PowerBiPublicEmbedSettingsForm'
+    _title: 'Power BI public embed'
+  requirements:
+    _permission: 'administer powerbi public embed'
+
+powerbi_public_embed.embed_config:
+  path: '/api/powerbi/embed-config/{slug}'
+  defaults:
+    _controller: '\Drupal\powerbi_public_embed\Controller\EmbedConfigController::getConfig'
+  requirements:
+    _access: 'TRUE'
+    slug: '[a-z0-9\-]+'
+  methods: [GET]
