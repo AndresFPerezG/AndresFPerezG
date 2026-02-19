@@ -1,15 +1,15 @@
-# Implementación de referencia: Power BI público seguro en Drupal
+# Guía amigable: mostrar reportes públicos de Power BI en Drupal
 
-## 1) Objetivo
+## Resumen rápido (en lenguaje simple)
 
-Implementar en Drupal un mecanismo para embeber reportes de Power BI en un portal público (sin login de usuario final), minimizando riesgos de seguridad mediante:
+Esta solución permite que **cualquier persona** vea reportes de Power BI en una página Drupal pública, pero sin usar enlaces públicos inseguros.
 
-- Token de embed temporal generado en backend.
-- Allowlist de reportes permitidos por `slug`.
-- Rate limit del endpoint de tokens.
-- Modo demo (`mock_mode`) para pruebas sin credenciales reales.
+La idea clave es:
 
-> **Importante:** esta solución evita `Publish to web` y usa el patrón recomendado `App owns data`.
+- El visitante ve el reporte.
+- Drupal pide un permiso temporal en segundo plano.
+- Ese permiso dura poco tiempo.
+- Solo se muestran reportes previamente autorizados.
 
 ---
 
@@ -19,153 +19,138 @@ Implementar en Drupal un mecanismo para embeber reportes de Power BI en un porta
 
 ---
 
-## 2) Qué se implementó en este repositorio
+## ¿Qué problema resuelve?
 
-Se creó el módulo custom:
+En un portal gubernamental abierto al público:
+
+- no puedes pedir login a todos los visitantes,
+- pero tampoco debes exponer reportes con URL pública abierta.
+
+Por eso se implementó un modelo intermedio:
+
+1. Portal abierto para toda la ciudadanía.
+2. Seguridad mínima obligatoria en backend.
+3. Tokens cortos para reducir riesgo.
+
+---
+
+## ¿Qué se construyó en este repositorio?
+
+Se creó un módulo en Drupal llamado:
 
 `web/modules/custom/powerbi_public_embed`
 
-### Archivos principales
+En palabras sencillas, este módulo hace tres cosas:
 
-- `powerbi_public_embed.info.yml`  
-  Define el módulo Drupal.
-- `powerbi_public_embed.routing.yml`  
-  Expone:
-  - `/api/powerbi/embed-config/{slug}` (público)
-  - `/admin/config/services/powerbi-public-embed` (configuración)
-- `src/Service/PowerBiEmbedService.php`  
-  Lógica de negocio:
-  - lectura de allowlist
-  - generación de access token (Entra ID)
-  - generación de embed token (Power BI API)
-  - caché segura y modo mock
-- `src/Controller/EmbedConfigController.php`  
-  Endpoint JSON con rate limit por IP+slug.
-- `src/Form/PowerBiPublicEmbedSettingsForm.php`  
-  Formulario administrativo para credenciales y parámetros.
-- `src/Plugin/Block/PowerBiPublicEmbedBlock.php`  
-  Bloque para insertar el contenedor de un reporte por slug.
-- `js/powerbi-public-embed.js`  
-  Frontend para:
-  - pedir embed config al endpoint
-  - embeber usando `powerbi-client`
-  - fallback visual en `mock_mode`
-- `config/install/powerbi_public_embed.settings.yml`  
-  Configuración de ejemplo.
+1. **Entrega configuración segura al navegador** para abrir el reporte.
+2. **Controla qué reportes están permitidos** (por slug).
+3. **Aplica límites de uso** para evitar abuso del endpoint.
+
+También incluye un **modo demo** (`mock_mode`) para probar el flujo sin credenciales reales.
 
 ---
 
-## 3) Flujo técnico
+## ¿Cómo funciona? (paso a paso, sin tecnicismos)
 
-1. Un visitante abre una página pública de Drupal con el bloque de reporte.
-2. El JS del bloque solicita `GET /api/powerbi/embed-config/{slug}`.
-3. Drupal aplica rate limit.
-4. Drupal valida que el `slug` exista en la allowlist.
-5. Si `mock_mode=true`, responde token simulado (demo).
-6. Si `mock_mode=false`:
-   - Drupal solicita access token a Entra ID (client credentials).
-   - Drupal solicita embed token a Power BI API.
-   - Drupal responde JSON con `embedUrl`, `reportId`, `accessToken`.
-7. El navegador embebe el reporte con `powerbi-client`.
+Piensa en esto como una taquilla:
+
+1. El visitante entra a la página y pide ver un reporte.
+2. Drupal revisa si ese reporte está en la lista permitida.
+3. Si está permitido, Drupal solicita un "pase temporal".
+4. Drupal devuelve ese pase al navegador.
+5. El navegador usa el pase para mostrar el reporte.
+
+Ese pase se vence rápido, así que no queda abierto de forma permanente.
 
 ---
 
-## 4) Cómo probar rápido con datos de ejemplo
+## ¿Esta implementación usa Web Component?
 
-### 4.1 Activar módulo
+**Respuesta corta: no, en esta versión no se usa Web Component.**
+
+Lo que se implementó fue:
+
+- un **bloque de Drupal** (`PowerBiPublicEmbedBlock`)
+- más un archivo JavaScript (`powerbi-public-embed.js`)
+- que usa la librería de Power BI para embeber el reporte.
+
+### ¿Por qué no se usó Web Component aquí?
+
+Porque para un MVP rápido era más directo integrarlo con el sistema nativo de bloques de Drupal.
+Esto reduce tiempos y evita complejidad adicional.
+
+### ¿Se puede migrar después a Web Component?
+
+Sí, totalmente.  
+Si su equipo decide usar Angular Elements o Web Components, se puede encapsular la capa visual sin cambiar la lógica de seguridad del backend.
+
+---
+
+## Cómo probarlo hoy con datos de ejemplo
+
+### 1) Activar módulo
 
 ```bash
 drush en powerbi_public_embed -y
 drush cr
 ```
 
-### 4.2 Configurar bloque
+### 2) Colocar el bloque en una página
 
 1. Ir a **Estructura > Bloques**.
-2. Agregar bloque **Power BI public embed** en la región deseada.
-3. Definir `report_slug` con un slug existente en la allowlist, por ejemplo:
-   - `economia-nacional`
+2. Agregar bloque **Power BI public embed**.
+3. Usar un slug de ejemplo, por ejemplo: `economia-nacional`.
 
-### 4.3 Verificar endpoint demo
-
-Con `mock_mode=true` (valor por defecto), el endpoint responde sin llamar a APIs externas:
+### 3) Confirmar que responde el endpoint demo
 
 ```bash
 curl -s "https://TU-DOMINIO/api/powerbi/embed-config/economia-nacional"
 ```
 
-Respuesta esperada (ejemplo):
-
-```json
-{
-  "slug": "economia-nacional",
-  "reportId": "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb",
-  "groupId": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
-  "embedUrl": "https://app.powerbi.com/reportEmbed?reportId=bbbb...&groupId=aaaa...",
-  "accessToken": "mock_...",
-  "tokenType": "Embed",
-  "expiration": "2026-02-19T00:00:00+00:00",
-  "settings": {
-    "panes": {
-      "filters": { "visible": false, "expanded": false },
-      "pageNavigation": { "visible": false }
-    },
-    "bars": {
-      "statusBar": { "visible": false },
-      "actionBar": { "visible": false }
-    }
-  },
-  "isMock": true
-}
-```
+Si todo está bien, verás un JSON con datos de ejemplo y `isMock: true`.
 
 ---
 
-## 5) Paso a producción
+## ¿Cómo pasar de demo a producción?
 
-Ir a:
+En Drupal, abrir:
 
 `/admin/config/services/powerbi-public-embed`
 
-y ajustar:
+y hacer estos cambios:
 
-1. `tenant_id`, `client_id`, `client_secret`.
-2. `mock_mode = false`.
-3. Allowlist de reportes reales (`slug|workspace_id|report_id|dataset_id`).
-4. Rate limit según tráfico esperado.
-5. Limpiar caché:
-
-```bash
-drush cr
-```
+1. Cargar credenciales reales (`tenant_id`, `client_id`, `client_secret`).
+2. Cambiar `mock_mode` a `false`.
+3. Configurar reportes reales en la lista permitida.
+4. Mantener activo el rate limit.
+5. Limpiar caché con `drush cr`.
 
 ---
 
-## 6) Checklist mínimo de seguridad
+## Medidas de seguridad recomendadas (explicadas simple)
 
-- [ ] **No usar** `Publish to web`.
-- [ ] Mantener `client_secret` fuera de repositorio (ideal: variables de entorno o secret manager).
-- [ ] Aplicar WAF/CDN en frontal del sitio público.
-- [ ] Mantener rate limit activo en endpoint `/api/powerbi/embed-config/*`.
-- [ ] Permitir únicamente slugs definidos en allowlist.
-- [ ] Deshabilitar opciones de exportación en Power BI tenant/workspace cuando aplique.
-- [ ] Revisar logs de errores y patrones de abuso.
-- [ ] Configurar CSP para permitir únicamente orígenes necesarios (`app.powerbi.com`, `*.powerbi.com` según caso).
-
----
-
-## 7) Limitaciones conocidas de este ejemplo
-
-- El frontend carga `powerbi-client` desde CDN (válido para demo; en entornos estrictos conviene empaquetarlo localmente).
-- El bloqueo de exportación se limita a UI/ajustes de embed; el control definitivo debe reforzarse en configuración del tenant/workspace Power BI.
-- No incluye RLS avanzada (se puede extender en el servicio para token generation con identidades efectivas).
+- **No usar "Publish to web"** (enlace público abierto).
+- Guardar secretos fuera del repositorio.
+- Usar WAF/CDN para proteger el portal público.
+- Limitar cuántas veces se puede pedir token por minuto.
+- Permitir solo reportes autorizados (allowlist).
+- Desactivar exportaciones si no son necesarias.
+- Revisar logs para detectar abuso.
 
 ---
 
-## 8) Ruta recomendada de evolución (rápida)
+## ¿Qué queda pendiente en una fase 2?
 
-1. Desplegar este módulo como MVP.
-2. Monitorear endpoint (latencia, errores, abuso).
-3. Mover secretos a gestor seguro.
-4. Añadir métricas/auditoría centralizada.
-5. Si se requiere, encapsular el frontend en Web Component corporativo manteniendo este backend como token broker.
+- Pasar librerías frontend de CDN a paquete interno.
+- Mejorar monitoreo y alertas.
+- Añadir políticas más finas por tipo de reporte.
+- Si el negocio lo pide, mover el frontend a Web Component.
+
+---
+
+## Glosario breve (para no técnicos)
+
+- **Token temporal:** permiso que dura pocos minutos.
+- **Allowlist:** lista de reportes permitidos.
+- **Rate limit:** límite de solicitudes para evitar abuso.
+- **MVP:** primera versión funcional, rápida de implementar.
