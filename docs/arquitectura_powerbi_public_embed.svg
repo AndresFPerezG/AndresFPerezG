@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="980" viewBox="0 0 1600 980" role="img" aria-labelledby="title desc">
-  <title id="title">Arquitectura Drupal + Power BI Public Embed</title>
-  <desc id="desc">Diagrama de arquitectura para embeber reportes de Power BI en portal Drupal publico con token broker seguro.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" width="1700" height="1220" viewBox="0 0 1700 1220" role="img" aria-labelledby="title desc">
+  <title id="title">Arquitectura Drupal y Power BI para portal publico</title>
+  <desc id="desc">Diagrama limpio de arquitectura para embed publico de Power BI con broker de token en Drupal.</desc>
 
   <defs>
     <style>
@@ -11,111 +11,128 @@
       .box-soft { fill: #eff6ff; stroke: #1d4ed8; stroke-width: 2; rx: 10; ry: 10; }
       .box-sec { fill: #f0fdf4; stroke: #166534; stroke-width: 2; rx: 10; ry: 10; }
       .box-ext { fill: #fff7ed; stroke: #9a3412; stroke-width: 2; rx: 10; ry: 10; }
-      .title { font-family: Arial, sans-serif; font-size: 28px; font-weight: 700; fill: #0f172a; }
+      .title { font-family: Arial, sans-serif; font-size: 30px; font-weight: 700; fill: #0f172a; }
       .subtitle { font-family: Arial, sans-serif; font-size: 16px; fill: #334155; }
-      .zone-title { font-family: Arial, sans-serif; font-size: 18px; font-weight: 700; fill: #1e293b; }
-      .label { font-family: Arial, sans-serif; font-size: 15px; font-weight: 700; fill: #0f172a; }
-      .small { font-family: Arial, sans-serif; font-size: 13px; fill: #1e293b; }
-      .note { font-family: Arial, sans-serif; font-size: 13px; fill: #334155; }
-      .security { font-family: Arial, sans-serif; font-size: 13px; fill: #166534; font-weight: 700; }
-      .arrow { stroke: #0f172a; stroke-width: 2.2; fill: none; marker-end: url(#arrow); }
-      .arrow-dashed { stroke: #475569; stroke-width: 2; fill: none; stroke-dasharray: 8 6; marker-end: url(#arrow); }
+      .zone-title { font-family: Arial, sans-serif; font-size: 20px; font-weight: 700; fill: #1e293b; }
+      .label { font-family: Arial, sans-serif; font-size: 16px; font-weight: 700; fill: #0f172a; }
+      .small { font-family: Arial, sans-serif; font-size: 14px; fill: #1e293b; }
+      .flow { font-family: Arial, sans-serif; font-size: 14px; fill: #0f172a; }
+      .flow-title { font-family: Arial, sans-serif; font-size: 18px; font-weight: 700; fill: #0f172a; }
+      .security { font-family: Arial, sans-serif; font-size: 14px; fill: #166534; font-weight: 700; }
+      .arrow { stroke: #0f172a; stroke-width: 2.4; fill: none; marker-end: url(#arrowHead); }
+      .arrow-dashed { stroke: #475569; stroke-width: 2.2; fill: none; stroke-dasharray: 8 6; marker-end: url(#arrowHead); }
+      .step-circle { fill: #0f172a; }
+      .step-number { font-family: Arial, sans-serif; font-size: 12px; fill: #ffffff; font-weight: 700; text-anchor: middle; dominant-baseline: middle; }
     </style>
-    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+    <marker id="arrowHead" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
       <path d="M0,0 L12,6 L0,12 z" fill="#0f172a"/>
     </marker>
   </defs>
 
-  <rect x="0" y="0" width="1600" height="980" class="bg"/>
+  <rect x="0" y="0" width="1700" height="1220" class="bg"/>
 
-  <text x="48" y="52" class="title">Arquitectura recomendada: Drupal + Power BI (Portal publico)</text>
-  <text x="48" y="82" class="subtitle">Patron App Owns Data con token broker backend, allowlist de reportes y rate limit de endpoint.</text>
+  <text x="50" y="56" class="title">Arquitectura recomendada: Drupal + Power BI (portal publico)</text>
+  <text x="50" y="86" class="subtitle">Diseno actualizado con separacion visual y flujo numerado para evitar montajes entre textos y flechas.</text>
 
-  <rect x="38" y="118" width="1524" height="260" class="zone"/>
-  <text x="58" y="150" class="zone-title">Capa publica (Internet)</text>
+  <rect x="40" y="125" width="1620" height="270" class="zone"/>
+  <text x="60" y="160" class="zone-title">Capa publica (internet)</text>
 
-  <rect x="72" y="178" width="230" height="150" class="box"/>
-  <text x="92" y="214" class="label">Visitante anonimo</text>
-  <text x="92" y="238" class="small">Navegador web</text>
-  <text x="92" y="260" class="small">Sin autenticacion</text>
+  <rect x="80" y="200" width="220" height="150" class="box"/>
+  <text x="100" y="238" class="label">Visitante anonimo</text>
+  <text x="100" y="262" class="small">Navegador web</text>
+  <text x="100" y="286" class="small">Sin inicio de sesion</text>
 
-  <rect x="360" y="178" width="270" height="150" class="box-sec"/>
-  <text x="380" y="214" class="label">WAF / CDN / Reverse Proxy</text>
-  <text x="380" y="238" class="small">TLS termination</text>
-  <text x="380" y="260" class="small">Rate limit global</text>
-  <text x="380" y="282" class="small">Proteccion anti-bot</text>
+  <rect x="340" y="200" width="280" height="150" class="box-sec"/>
+  <text x="360" y="238" class="label">WAF / CDN / Proxy</text>
+  <text x="360" y="262" class="small">Proteccion de borde</text>
+  <text x="360" y="286" class="small">Rate limit global</text>
+  <text x="360" y="310" class="small">Filtro anti abuso</text>
 
-  <rect x="690" y="178" width="410" height="150" class="box-soft"/>
-  <text x="710" y="214" class="label">Drupal frontend (pagina publica)</text>
-  <text x="710" y="238" class="small">Bloque: PowerBiPublicEmbedBlock</text>
-  <text x="710" y="260" class="small">JS: powerbi-public-embed.js + powerbi-client</text>
-  <text x="710" y="282" class="small">Solicita /api/powerbi/embed-config/{slug}</text>
+  <rect x="670" y="200" width="370" height="150" class="box-soft"/>
+  <text x="690" y="238" class="label">Drupal frontend</text>
+  <text x="690" y="262" class="small">Bloque PowerBiPublicEmbedBlock</text>
+  <text x="690" y="286" class="small">JS powerbi-public-embed.js</text>
+  <text x="690" y="310" class="small">Pide /api/powerbi/embed-config/{slug}</text>
 
-  <rect x="1160" y="178" width="360" height="150" class="box-ext"/>
-  <text x="1180" y="214" class="label">Power BI Render Service</text>
-  <text x="1180" y="238" class="small">app.powerbi.com/reportEmbed</text>
-  <text x="1180" y="260" class="small">Render del reporte en cliente</text>
+  <rect x="1110" y="200" width="390" height="150" class="box-ext"/>
+  <text x="1130" y="238" class="label">Power BI render service</text>
+  <text x="1130" y="262" class="small">app.powerbi.com/reportEmbed</text>
+  <text x="1130" y="286" class="small">Muestra el reporte al visitante</text>
 
-  <rect x="38" y="420" width="1524" height="500" class="zone"/>
-  <text x="58" y="452" class="zone-title">Backend y servicios confiables</text>
+  <rect x="40" y="430" width="1620" height="530" class="zone"/>
+  <text x="60" y="465" class="zone-title">Backend y servicios confiables</text>
 
-  <rect x="72" y="490" width="480" height="180" class="box-soft"/>
-  <text x="92" y="526" class="label">Drupal backend (modulo powerbi_public_embed)</text>
-  <text x="92" y="550" class="small">Controller: /api/powerbi/embed-config/{slug}</text>
-  <text x="92" y="572" class="small">Service: PowerBiEmbedService</text>
-  <text x="92" y="594" class="small">Valida allowlist por slug</text>
-  <text x="92" y="616" class="small">Genera embed token temporal</text>
-  <text x="92" y="638" class="small">Headers no-store para respuestas con token</text>
+  <rect x="80" y="510" width="520" height="220" class="box-soft"/>
+  <text x="100" y="548" class="label">Drupal backend (modulo powerbi_public_embed)</text>
+  <text x="100" y="572" class="small">Endpoint: /api/powerbi/embed-config/{slug}</text>
+  <text x="100" y="596" class="small">Valida slug en lista permitida (allowlist)</text>
+  <text x="100" y="620" class="small">Solicita tokens temporales</text>
+  <text x="100" y="644" class="small">Devuelve solo lo necesario para el embed</text>
+  <text x="100" y="668" class="security">Nunca expone credenciales en el navegador</text>
 
-  <rect x="72" y="710" width="480" height="170" class="box-sec"/>
-  <text x="92" y="746" class="label">Controles de seguridad en backend</text>
-  <text x="92" y="770" class="small">Flood API: rate limit por IP + slug</text>
-  <text x="92" y="792" class="small">Cache TTL corto: access token / embed token</text>
-  <text x="92" y="814" class="small">No exponer client_secret en frontend</text>
-  <text x="92" y="836" class="small">mock_mode para pruebas sin credenciales reales</text>
+  <rect x="80" y="760" width="520" height="170" class="box-sec"/>
+  <text x="100" y="798" class="label">Controles de seguridad</text>
+  <text x="100" y="822" class="small">Rate limit por IP y slug (Flood API)</text>
+  <text x="100" y="846" class="small">Cache con TTL corto para tokens</text>
+  <text x="100" y="870" class="small">mock_mode para pruebas de demo</text>
+  <text x="100" y="894" class="small">Headers no-store en respuestas con token</text>
 
-  <rect x="620" y="540" width="360" height="150" class="box-ext"/>
-  <text x="640" y="576" class="label">Microsoft Entra ID</text>
-  <text x="640" y="600" class="small">OAuth2 Client Credentials</text>
-  <text x="640" y="622" class="small">Entrega access token para Power BI API</text>
+  <rect x="680" y="540" width="360" height="170" class="box-ext"/>
+  <text x="700" y="578" class="label">Microsoft Entra ID</text>
+  <text x="700" y="602" class="small">OAuth2 Client Credentials</text>
+  <text x="700" y="626" class="small">Entrega access token al backend</text>
 
-  <rect x="1040" y="540" width="480" height="150" class="box-ext"/>
-  <text x="1060" y="576" class="label">Power BI REST API</text>
-  <text x="1060" y="600" class="small">GenerateToken (View)</text>
-  <text x="1060" y="622" class="small">Workspace + Report permitidos</text>
-  <text x="1060" y="644" class="small">Token de embed con expiracion corta</text>
+  <rect x="1110" y="540" width="390" height="170" class="box-ext"/>
+  <text x="1130" y="578" class="label">Power BI REST API</text>
+  <text x="1130" y="602" class="small">GenerateToken (View)</text>
+  <text x="1130" y="626" class="small">Token de embed con expiracion corta</text>
 
-  <rect x="620" y="730" width="900" height="150" class="box"/>
-  <text x="640" y="766" class="label">Salida al navegador</text>
-  <text x="640" y="790" class="small">JSON embed-config: { reportId, groupId, embedUrl, accessToken, expiration, settings }</text>
-  <text x="640" y="812" class="small">El frontend usa el token y embebe reporte en el contenedor Drupal</text>
-  <text x="640" y="836" class="security">Nunca se publica URL abierta tipo "Publish to web".</text>
+  <rect x="680" y="760" width="820" height="170" class="box"/>
+  <text x="700" y="798" class="label">Respuesta al frontend</text>
+  <text x="700" y="822" class="small">JSON: reportId, groupId, embedUrl, accessToken, expiration, settings</text>
+  <text x="700" y="846" class="small">El navegador recibe configuracion temporal y renderiza el reporte</text>
+  <text x="700" y="870" class="security">Se evita el modelo inseguro de URL publica permanente</text>
 
-  <path d="M302 252 L360 252" class="arrow"/>
-  <path d="M630 252 L690 252" class="arrow"/>
-  <path d="M1100 252 L1160 252" class="arrow-dashed"/>
+  <path d="M300 275 L340 275" class="arrow"/>
+  <circle cx="320" cy="252" r="13" class="step-circle"/>
+  <text x="320" y="252" class="step-number">1</text>
 
-  <path d="M860 328 L860 490 L552 580" class="arrow"/>
-  <text x="772" y="376" class="note">1) Solicitud embed-config</text>
+  <path d="M620 275 L670 275" class="arrow"/>
+  <circle cx="645" cy="252" r="13" class="step-circle"/>
+  <text x="645" y="252" class="step-number">2</text>
 
-  <path d="M552 560 L620 560" class="arrow"/>
-  <text x="566" y="548" class="note">2) OAuth2 token</text>
+  <path d="M1040 275 L1110 275" class="arrow-dashed"/>
+  <circle cx="1075" cy="252" r="13" class="step-circle"/>
+  <text x="1075" y="252" class="step-number">3</text>
 
-  <path d="M980 616 L1040 616" class="arrow"/>
-  <text x="990" y="604" class="note">3) GenerateToken</text>
+  <path d="M855 350 L855 510" class="arrow"/>
+  <circle cx="878" cy="430" r="13" class="step-circle"/>
+  <text x="878" y="430" class="step-number">4</text>
 
-  <path d="M1280 690 L1280 730" class="arrow"/>
-  <text x="1210" y="718" class="note">4) Embed token + metadata</text>
+  <path d="M600 600 L680 600" class="arrow"/>
+  <circle cx="640" cy="577" r="13" class="step-circle"/>
+  <text x="640" y="577" class="step-number">5</text>
 
-  <path d="M620 790 L552 790 L552 610" class="arrow"/>
-  <text x="434" y="704" class="note">5) Respuesta JSON</text>
+  <path d="M600 655 L1110 655" class="arrow"/>
+  <circle cx="855" cy="632" r="13" class="step-circle"/>
+  <text x="855" y="632" class="step-number">6</text>
 
-  <path d="M552 610 L760 610 L760 328" class="arrow"/>
-  <text x="624" y="590" class="note">6) Retorno a frontend</text>
+  <path d="M1305 710 L1305 760" class="arrow"/>
+  <circle cx="1328" cy="735" r="13" class="step-circle"/>
+  <text x="1328" y="735" class="step-number">7</text>
 
-  <path d="M960 252 L1160 252" class="arrow"/>
-  <text x="962" y="238" class="note">7) Render reporte</text>
+  <path d="M900 760 L900 350" class="arrow"/>
+  <circle cx="923" cy="555" r="13" class="step-circle"/>
+  <text x="923" y="555" class="step-number">8</text>
 
-  <rect x="1180" y="80" width="360" height="30" class="box-sec"/>
-  <text x="1196" y="101" class="security">Seguridad clave: allowlist + rate limit + tokens cortos</text>
+  <rect x="40" y="990" width="1620" height="190" class="zone"/>
+  <text x="60" y="1025" class="flow-title">Flujo numerado (lectura rapida)</text>
+  <text x="60" y="1055" class="flow">1) El visitante entra al portal publico.</text>
+  <text x="60" y="1080" class="flow">2) El trafico pasa por WAF/CDN y llega al frontend Drupal.</text>
+  <text x="60" y="1105" class="flow">3) El reporte se renderiza en el cliente solo con configuracion temporal.</text>
+  <text x="820" y="1055" class="flow">4) El frontend pide embed-config al backend Drupal.</text>
+  <text x="820" y="1080" class="flow">5) Drupal solicita access token a Entra ID.</text>
+  <text x="820" y="1105" class="flow">6) Drupal solicita embed token a Power BI API.</text>
+  <text x="820" y="1130" class="flow">7) Power BI responde token temporal al backend.</text>
+  <text x="820" y="1155" class="flow">8) Drupal devuelve JSON seguro al frontend para mostrar el reporte.</text>
 </svg>
