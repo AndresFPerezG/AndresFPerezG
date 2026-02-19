@@ -13,6 +13,12 @@ Implementar en Drupal un mecanismo para embeber reportes de Power BI en un porta
 
 ---
 
+## Arquitectura visual
+
+![Arquitectura Drupal Power BI Public Embed](./arquitectura_powerbi_public_embed.svg)
+
+---
+
 ## 2) Qué se implementó en este repositorio
 
 Se creó el módulo custom:
